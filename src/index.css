@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* y축 스크롤바 숨기기 */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+
+/* 스크롤은 루트 div(App)에서만 가능하게 하고, 전체는 고정 */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
