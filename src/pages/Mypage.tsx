@@ -82,14 +82,9 @@ export default function MyPage() {
       const ws = wb.Sheets[wsname];
       const data = XLSX.utils.sheet_to_json(ws, { range: 2 });
       const filtered = data.map((row: any) => {
-        let category = (row['이수구분'] || '').toString().replace(/\s/g, '');
-        if (category.startsWith('교선')) category = '교선';
         return {
           학수번호: row['학수번호'],
           교과목명: row['교과목명'],
-          이수구분: category,
-          학점: Number(row['학점']),
-          등급: row['등급'] || '-',
         };
       });
       setExcelData(filtered);
@@ -277,9 +272,6 @@ export default function MyPage() {
               <tr className="bg-gray-100">
                 <th className="p-1">학수번호</th>
                 <th className="p-1">교과목명</th>
-                <th className="p-1">이수구분</th>
-                <th className="p-1">학점</th>
-                <th className="p-1">등급</th>
               </tr>
             </thead>
             <tbody>
@@ -287,9 +279,6 @@ export default function MyPage() {
                 <tr key={idx} className="border-t">
                   <td className="p-1 text-center">{row.학수번호}</td>
                   <td className="p-1">{row.교과목명}</td>
-                  <td className="p-1 text-center">{row.이수구분}</td>
-                  <td className="p-1 text-center">{row.학점}</td>
-                  <td className="p-1 text-center">{row.등급}</td>
                 </tr>
               ))}
             </tbody>
