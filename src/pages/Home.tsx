@@ -207,7 +207,10 @@ const Home = () => {
               >
                 ✕
               </button>
-              <h3 className="text-xl font-bold text-sejongred">{modalLecture.name}</h3>
+              <div className="flex justify-between">
+                <h3 className="text-xl font-bold text-sejongred">{modalLecture.name}</h3>
+                <h1 className="text-m text-red-900">{modalLecture.score}%</h1>
+              </div>
               <div className="text-xs text-gray-400">{modalLecture.professor} 교수</div>
               {/* <div className="my-2 text-xs text-gray-400">학과: {user.major}</div> */}
               <div className="mb-2 text-xs text-gray-400">트랙: {modalLecture.track}</div>
