@@ -16,7 +16,6 @@ export default function MyPage() {
       강의력: '',
       과제: '',
       팀플: '',
-      성적: '',
       출결: '',
       시험: '',
     },
@@ -51,7 +50,6 @@ export default function MyPage() {
           강의력: parsedPref.강의력 || '',
           과제: parsedPref.과제 || '',
           팀플: parsedPref.팀플 || '',
-          성적: parsedPref.성적 || '',
           출결: parsedPref.출결 || '',
           시험: parsedPref.시험 || '',
         },
@@ -131,7 +129,6 @@ export default function MyPage() {
           강의력: parsedPref.강의력 || '',
           과제: parsedPref.과제 || '',
           팀플: parsedPref.팀플 || '',
-          성적: parsedPref.성적 || '',
           출결: parsedPref.출결 || '',
           시험: parsedPref.시험 || '',
         },
@@ -151,6 +148,12 @@ export default function MyPage() {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">마이페이지</h2>
         <div className="flex gap-2">
+          <button
+            onClick={handleLogout}
+            className="rounded px-3 py-1 font-semibold text-red-500 hover:bg-red-200"
+          >
+            로그아웃
+          </button>
           {!isEditing ? (
             <button onClick={() => setIsEditing(true)} className="font-semibold text-blue-500">
               수정
@@ -165,12 +168,6 @@ export default function MyPage() {
               </button>
             </>
           )}
-          <button
-            onClick={handleLogout}
-            className="rounded bg-red-100 px-3 py-1 text-sm font-medium text-red-600 hover:bg-red-200"
-          >
-            로그아웃
-          </button>
         </div>
       </div>
 
@@ -243,7 +240,7 @@ export default function MyPage() {
       </div>
 
       {/* 선호도 설정 */}
-      <div className="grid grid-cols-2 gap-1">
+      <div className="grid grid-cols-2 gap-2">
         {Object.entries(userInfo.lecturePref).map(([k, v]) => (
           <div key={k} className="space-y-1">
             <label className="text-sm font-medium">#{k}</label>
@@ -255,12 +252,9 @@ export default function MyPage() {
             >
               {(k === '과제' || k === '팀플') &&
                 ['적음', '보통', '많음'].map((opt) => <option key={opt}>{opt}</option>)}
-              {k === '성적' &&
-                ['깐깐한', '너그러움'].map((opt) => <option key={opt}>{opt}</option>)}
               {k === '출결' &&
                 ['직접호명', '유체크'].map((opt) => <option key={opt}>{opt}</option>)}
-              {k === '시험' &&
-                ['객관식', '주관식', '혼합'].map((opt) => <option key={opt}>{opt}</option>)}
+              {k === '시험' && ['어려움', '쉬움'].map((opt) => <option key={opt}>{opt}</option>)}
               {k === '강의력' &&
                 ['좋음', '보통', '나쁨'].map((opt) => <option key={opt}>{opt}</option>)}
             </select>

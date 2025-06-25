@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 
-const StepTwo = ({ onNext, onChange }: any) => {
+const StepTwo = ({ onNext, onPrev, onChange }: any) => {
   const [excelData, setExcelData] = useState<any[]>([]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -86,12 +86,26 @@ const StepTwo = ({ onNext, onChange }: any) => {
           </table>
         </div>
       )}
-      <button
-        onClick={onNext}
-        className="w-full rounded-lg bg-sejongred py-3 font-semibold text-white transition hover:bg-red-600"
-      >
-        다음
-      </button>
+
+      <div className="mt-6 flex justify-between gap-4">
+        <button
+          onClick={onPrev}
+          className="w-full rounded-lg border border-gray-300 bg-white py-3 font-semibold text-gray-700 hover:bg-gray-100"
+        >
+          이전
+        </button>
+        <button
+          onClick={onNext}
+          disabled={excelData.length === 0}
+          className={`w-full rounded-lg py-3 font-semibold text-white transition ${
+            excelData.length > 0
+              ? 'bg-sejongred hover:bg-red-600'
+              : 'cursor-not-allowed bg-gray-300'
+          }`}
+        >
+          다음
+        </button>
+      </div>
     </div>
   );
 };

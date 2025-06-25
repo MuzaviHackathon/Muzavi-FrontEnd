@@ -14,6 +14,7 @@ const InitialSetup = () => {
   });
 
   const nextStep = () => setStep((prev) => prev + 1);
+  const prevStep = () => setStep((prev) => prev - 1);
 
   const updateData = (key: string, value: any) => {
     setUserData((prev) => ({ ...prev, [key]: value }));
@@ -22,8 +23,8 @@ const InitialSetup = () => {
   return (
     <div className="mx-auto max-w-xl p-6">
       {step === 1 && <StepOne onNext={nextStep} onChange={updateData} />}
-      {step === 2 && <StepTwo onNext={nextStep} onChange={updateData} />}
-      {step === 3 && <StepThree data={userData} />}
+      {step === 2 && <StepTwo onNext={nextStep} onPrev={prevStep} onChange={updateData} />}
+      {step === 3 && <StepThree data={userData} onPrev={prevStep} />}
     </div>
   );
 };
