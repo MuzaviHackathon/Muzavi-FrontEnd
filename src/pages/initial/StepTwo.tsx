@@ -4,12 +4,43 @@ import * as XLSX from 'xlsx';
 const StepTwo = ({ onNext, onPrev, onChange }: any) => {
   const [excelData, setExcelData] = useState<any[]>([]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
+
+  //   const reader = new FileReader();
+  //   reader.onload = (evt) => {
+  //     const bstr = evt.target?.result;
+  //     const wb = XLSX.read(bstr, { type: 'binary' });
+  //     const wsname = wb.SheetNames[0];
+  //     const ws = wb.Sheets[wsname];
+  //     const data = XLSX.utils.sheet_to_json(ws, { range: 3 });
+
+  //     const filtered = data.map((row: any) => {
+  //       let category = (row['이수구분'] || '').toString().replace(/\s/g, '');
+  //       if (category.startsWith('교선')) category = '교선';
+  //       return {
+  //         학수번호: row['학수번호'],
+  //         교과목명: row['교과목명'],
+  //         이수구분: category,
+  //         학점: Number(row['학점']),
+  //         등급: row['등급'] || '-',
+  //       };
+  //     });
+
+  //     setExcelData(filtered);
+  //     localStorage.setItem('excelData', JSON.stringify(filtered));
+  //     onChange('excelData', filtered);
+  //   };
+  //   reader.readAsBinaryString(file);
+  // };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (evt) => {
+    reader.onload = async (evt) => {
       const bstr = evt.target?.result;
       const wb = XLSX.read(bstr, { type: 'binary' });
       const wsname = wb.SheetNames[0];
@@ -31,7 +62,28 @@ const StepTwo = ({ onNext, onPrev, onChange }: any) => {
       setExcelData(filtered);
       localStorage.setItem('excelData', JSON.stringify(filtered));
       onChange('excelData', filtered);
+
+      // ✅ 여기서 서버로 원본 파일 업로드
+      try {
+        const formData = new FormData();
+        formData.append('file', file); // ⚠️ 백엔드에서 'file' 키로 받아야 함
+
+        const res = await fetch('http://localhost:8080/users/1/upload-file', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`업로드 실패: ${res.status} ${errText}`);
+        }
+
+        console.log('✅ 엑셀 파일 업로드 성공');
+      } catch (error) {
+        console.error('❌ 파일 업로드 오류:', error);
+      }
     };
+
     reader.readAsBinaryString(file);
   };
 
