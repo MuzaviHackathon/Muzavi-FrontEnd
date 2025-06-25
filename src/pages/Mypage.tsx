@@ -148,12 +148,14 @@ export default function MyPage() {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-bold">마이페이지</h2>
         <div className="flex gap-2">
-          <button
-            onClick={handleLogout}
-            className="rounded px-3 py-1 font-semibold text-red-500 hover:bg-red-200"
-          >
-            로그아웃
-          </button>
+          {!isEditing && (
+            <button
+              onClick={handleLogout}
+              className="rounded px-3 py-1 font-semibold text-red-500 hover:bg-red-200"
+            >
+              로그아웃
+            </button>
+          )}
           {!isEditing ? (
             <button onClick={() => setIsEditing(true)} className="font-semibold text-blue-500">
               수정
