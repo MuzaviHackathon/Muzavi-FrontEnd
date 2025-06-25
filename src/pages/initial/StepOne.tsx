@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const StepOne = ({ onNext, onChange }: any) => {
   const [isFormValid, setIsFormValid] = useState(false);
@@ -17,10 +18,10 @@ const StepOne = ({ onNext, onChange }: any) => {
     const requiredFields = [
       'name',
       'major',
-      'studentId',
-      'semesterCompleted',
-      'semesterPlan',
-      'careerGoal',
+      'studentNumber',
+      'semesterTaken',
+      'returnSemester',
+      'preferredJob',
     ];
     const isValid = requiredFields.every(
       (field) => data[field] && data[field].toString().trim() !== ''
@@ -28,23 +29,34 @@ const StepOne = ({ onNext, onChange }: any) => {
     setIsFormValid(isValid);
   };
 
-  // ✅ 입력 핸들러
   const handleInput = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     const updatedData = { ...getStoredData(), [name]: value };
-    localStorage.setItem('userInfo', JSON.stringify(updatedData)); // 저장
+    localStorage.setItem('userInfo', JSON.stringify(updatedData));
     onChange(name, value);
-    checkFormValidity(updatedData); // 유효성 검사
+    checkFormValidity(updatedData);
   };
 
-  // ✅ 저장된 데이터 불러오기
   useEffect(() => {
     const saved = getStoredData();
     Object.entries(saved).forEach(([key, value]) => {
-      onChange(key, value); // 부모에도 전달
+      onChange(key, value);
     });
-    checkFormValidity(saved); // 초기 유효성 검사
+    checkFormValidity(saved);
   }, []);
+
+  const handleSubmit = async () => {
+    const payload = getStoredData();
+
+    try {
+      const response = await axios.post('http://localhost:8080/users/register', payload);
+      console.log('등록 성공:', response.data);
+      onNext();
+    } catch (error) {
+      console.error('등록 실패:', error);
+      alert('사용자 등록 중 오류가 발생했습니다.');
+    }
+  };
 
   return (
     <div className="mx-auto mt-4 max-w-md space-y-6 rounded-xl bg-white p-5 shadow">
@@ -82,9 +94,9 @@ const StepOne = ({ onNext, onChange }: any) => {
       <div>
         <label className="mb-1 block font-medium">학번</label>
         <input
-          name="studentId"
+          name="studentNumber"
           type="number"
-          value={stored.studentId || ''}
+          value={stored.studentNumber || ''}
           placeholder="예: 20201234"
           onChange={handleInput}
           className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sejongred"
@@ -95,8 +107,8 @@ const StepOne = ({ onNext, onChange }: any) => {
       <div>
         <label className="mb-1 block font-medium">이수 학기</label>
         <select
-          name="semesterCompleted"
-          value={stored.semesterCompleted || ''}
+          name="semesterTaken"
+          value={stored.semesterTaken || ''}
           onChange={handleInput}
           className="w-full rounded-lg border bg-white px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-sejongred"
         >
@@ -113,8 +125,8 @@ const StepOne = ({ onNext, onChange }: any) => {
       <div>
         <label className="mb-1 block font-medium">재학 예정 학기</label>
         <select
-          name="semesterPlan"
-          value={stored.semesterPlan || ''}
+          name="returnSemester"
+          value={stored.returnSemester || ''}
           onChange={handleInput}
           className="w-full rounded-lg border bg-white px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-sejongred"
         >
@@ -131,17 +143,16 @@ const StepOne = ({ onNext, onChange }: any) => {
       <div>
         <label className="mb-1 block font-medium">희망 진로 분야</label>
         <input
-          name="careerGoal"
-          value={stored.careerGoal || ''}
+          name="preferredJob"
+          value={stored.preferredJob || ''}
           placeholder="예: 프론트엔드 개발자"
           onChange={handleInput}
           className="w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sejongred"
         />
       </div>
 
-      {/* 다음 버튼 */}
       <button
-        onClick={onNext}
+        onClick={handleSubmit}
         disabled={!isFormValid}
         className={`mt-4 w-full rounded-lg py-3 font-semibold text-white transition ${
           isFormValid ? 'bg-sejongred hover:bg-red-600' : 'cursor-not-allowed bg-gray-300'
