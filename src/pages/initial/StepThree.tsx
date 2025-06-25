@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 
 const preferenceOptions = {
   강의력: ['좋음', '보통', '나쁨'],
-  과제: ['적음', '보통', '많음'],
+  과제: ['많음', '보통', '적음'],
   팀플: ['적음', '보통', '많음'],
-  성적: ['깐깐한', '너그러움'],
+  시험: ['어려움', '쉬움'],
   출결: ['직접호명', '유체크'],
-  시험: ['객관식', '주관식', '혼합'],
 };
 
-const StepThree = ({ data }: any) => {
+const StepThree = ({ data, onPrev }: any) => {
   const [review, setReview] = useState<Record<string, string>>({});
   const navigate = useNavigate();
 
@@ -39,6 +38,10 @@ const StepThree = ({ data }: any) => {
     });
     navigate('/home');
   };
+
+  const isComplete =
+    Object.keys(preferenceOptions).length === Object.keys(review).length &&
+    Object.values(review).every((v) => v !== '');
 
   return (
     <div className="mx-auto mt-6 max-h-[calc(100vh-120px)] max-w-4xl overflow-hidden rounded-xl bg-white p-5 shadow">
@@ -71,12 +74,23 @@ const StepThree = ({ data }: any) => {
         ))}
       </div>
 
-      <button
-        onClick={handleFinish}
-        className="mt-6 w-full rounded-lg bg-sejongred py-2 font-semibold text-white transition hover:bg-red-600"
-      >
-        완료
-      </button>
+      <div className="mt-6 flex justify-between gap-4">
+        <button
+          onClick={onPrev}
+          className="w-full rounded-lg border border-gray-300 bg-white py-2 font-semibold text-gray-700 hover:bg-gray-100"
+        >
+          이전
+        </button>
+        <button
+          onClick={handleFinish}
+          disabled={!isComplete}
+          className={`w-full rounded-lg py-2 font-semibold text-white transition ${
+            isComplete ? 'bg-sejongred hover:bg-red-600' : 'cursor-not-allowed bg-gray-300'
+          }`}
+        >
+          완료
+        </button>
+      </div>
     </div>
   );
 };

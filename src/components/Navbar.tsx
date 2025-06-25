@@ -22,8 +22,8 @@ const navItems: TNavItemProps[] = [
     route: '/lecture',
     label: '강의',
     icon: {
-      default: '/assets/recommend.svg',
-      clicked: '/assets/recommend_clicked.svg',
+      default: '/assets/history.svg',
+      clicked: '/assets/history_clicked.svg',
     },
   },
   {
