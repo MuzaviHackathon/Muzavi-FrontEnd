@@ -4,37 +4,6 @@ import * as XLSX from 'xlsx';
 const StepTwo = ({ onNext, onPrev, onChange }: any) => {
   const [excelData, setExcelData] = useState<any[]>([]);
 
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
-
-  //   const reader = new FileReader();
-  //   reader.onload = (evt) => {
-  //     const bstr = evt.target?.result;
-  //     const wb = XLSX.read(bstr, { type: 'binary' });
-  //     const wsname = wb.SheetNames[0];
-  //     const ws = wb.Sheets[wsname];
-  //     const data = XLSX.utils.sheet_to_json(ws, { range: 3 });
-
-  //     const filtered = data.map((row: any) => {
-  //       let category = (row['이수구분'] || '').toString().replace(/\s/g, '');
-  //       if (category.startsWith('교선')) category = '교선';
-  //       return {
-  //         학수번호: row['학수번호'],
-  //         교과목명: row['교과목명'],
-  //         이수구분: category,
-  //         학점: Number(row['학점']),
-  //         등급: row['등급'] || '-',
-  //       };
-  //     });
-
-  //     setExcelData(filtered);
-  //     localStorage.setItem('excelData', JSON.stringify(filtered));
-  //     onChange('excelData', filtered);
-  //   };
-  //   reader.readAsBinaryString(file);
-  // };
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;

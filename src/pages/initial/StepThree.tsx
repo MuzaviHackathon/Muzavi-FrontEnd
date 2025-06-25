@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const preferenceOptions = {
   강의력: ['좋음', '보통', '나쁨'],
@@ -12,6 +13,7 @@ const preferenceOptions = {
 const StepThree = ({ data, onPrev }: any) => {
   const [review, setReview] = useState<Record<string, string>>({});
   const navigate = useNavigate();
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
     const saved = localStorage.getItem('lecturePreference');
@@ -31,12 +33,26 @@ const StepThree = ({ data, onPrev }: any) => {
     localStorage.setItem('lecturePreference', JSON.stringify(updated));
   };
 
-  const handleFinish = () => {
-    console.log('최종 사용자 설정 데이터:', {
-      ...data,
-      lecturePreference: review,
-    });
-    navigate('/home');
+  const handleFinish = async () => {
+    if (!userId) {
+      alert('로그인 정보가 없습니다.');
+      return;
+    }
+
+    const preferences = Object.entries(review).map(([category, option]) => ({
+      category,
+      option: `${category}${option}`,
+    }));
+
+    try {
+      await axios.post(`http://localhost:8080/users/1/preferences`, {
+        preferences,
+      });
+      navigate('/home');
+    } catch (err) {
+      console.error('선호도 저장 실패:', err);
+      alert('선호도 저장 중 오류가 발생했습니다.');
+    }
   };
 
   const isComplete =

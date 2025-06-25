@@ -91,6 +91,7 @@ const Home = () => {
   const [user, setUser] = useState<{ name: string; major: keyof typeof majorTabs } | null>(null);
   const [selectedTab, setSelectedTab] = useState('');
   const [modalLecture, setModalLecture] = useState<any>(null);
+  const [showExplanation, setShowExplanation] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('userInfo');
@@ -137,8 +138,18 @@ const Home = () => {
           ))}
         </div>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="flex flex-col items-center justify-center rounded-xl border p-4 shadow">
+          <div className="relative flex flex-col items-center justify-center rounded-xl border p-4 shadow">
             <h3 className="mb-2 text-lg font-semibold">트랙 이수 가능성</h3>
+
+            {/* ⓘ 아이콘 */}
+            <img
+              src="/assets/question.png"
+              alt="이유 보기"
+              onClick={() => setShowExplanation(true)}
+              className="absolute right-4 top-4 h-5 w-5 cursor-pointer transition hover:scale-110"
+              title="왜 이 퍼센트가 나왔을까요?"
+            />
+
             <div className="flex items-center justify-center">
               <PieChart width={140} height={140}>
                 <Pie
@@ -227,6 +238,29 @@ const Home = () => {
                   ))}
                 </div>
               )}
+            </div>
+          </div>
+        )}
+        {showExplanation && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+            <div className="relative w-[90%] max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+              <button
+                onClick={() => setShowExplanation(false)}
+                className="absolute right-4 top-3 text-lg text-gray-400 hover:text-black"
+              >
+                ✕
+              </button>
+              <h3 className="mb-3 text-lg font-bold text-sejongred">
+                왜 {trackProgressMock[selectedTab]}% 인가요?
+              </h3>
+              <p className="text-sm leading-relaxed text-gray-700">
+                이수율은 사용자의 수강 이력과 해당 트랙에 필요한 필수 과목 이수 여부를 기반으로
+                계산됩니다.
+                <br />
+                <br />
+                예를 들어, 해당 트랙에 속한 총 강의 수 대비 이미 이수한 과목 수의 비율로 산정되며,
+                엑셀로 업로드한 수강 내역이 반영됩니다.
+              </p>
             </div>
           </div>
         )}
